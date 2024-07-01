@@ -55,7 +55,7 @@ func Open(config Config) (*pgxpool.Pool, error) {
 	for conn == nil && trialCount < 5 {
 		trialCount++
 		conn, err = pgxpool.NewWithConfig(context.Background(), cfg)
-		if err != nil {
+		if err != nil || conn.Ping(context.Background()) != nil {
 			if trialCount == 5 {
 				return nil, fmt.Errorf("connect to database: %w", err)
 			}
